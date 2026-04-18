@@ -4,7 +4,7 @@ from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
 import PyPDF2
 
 # Load fine-tuned model
-model_path = "fine_tuned_llm"
+model_path = "https://huggingface.co/Tanushree23/pdf-qa-finetuned-model"
 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 model = AutoModelForQuestionAnswering.from_pretrained(model_path)
