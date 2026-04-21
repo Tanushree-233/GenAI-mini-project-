@@ -70,8 +70,8 @@ with col1:
 with col2:
 
     st.image(
-"https://images.unsplash.com/photo-1556155092-8707de31f9c4",
-use_container_width=True
+    "https://images.unsplash.com/photo-1556155092-8707de31f9c4",
+    use_container_width=True
     )
 
 st.markdown("---")
@@ -107,6 +107,8 @@ st.markdown("---")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
+# ----------- HELPER FUNCTIONS -----------
 
 def extract_values(text):
     numbers = list(map(int,re.findall(r'\d+',text)))
