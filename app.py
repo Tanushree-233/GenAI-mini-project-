@@ -3,32 +3,30 @@ import re
 
 st.set_page_config(page_title="FinCred AI", layout="wide")
 
-# ---------------- BACKGROUND + THEME ----------------
+# ----------- CLEAN DARK THEME -----------
+
 st.markdown("""
 <style>
 
-.stApp {
-background-image: url("https://images.unsplash.com/photo-1551288049-bebda4e38f71");
-background-size: cover;
-background-position: center;
-background-attachment: fixed;
+.stApp{
+background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 }
 
 .hero-card{
-background: rgba(0,0,0,0.65);
+background: rgba(255,255,255,0.08);
 padding:30px;
-border-radius:20px;
+border-radius:18px;
 backdrop-filter: blur(10px);
 }
 
 .metric-card{
-background: rgba(0,0,0,0.6);
+background: rgba(255,255,255,0.08);
 padding:20px;
 border-radius:15px;
 text-align:center;
 }
 
-h1,h2,h3,h4,h5,p,span,label{
+h1,h2,h3,h4,p{
 color:white !important;
 }
 
@@ -38,83 +36,87 @@ footer {visibility:hidden;}
 </style>
 """, unsafe_allow_html=True)
 
-# ---------------- TITLE ----------------
-st.markdown("<h1 style='text-align:center;'>🏦 FinCred AI</h1>", unsafe_allow_html=True)
-st.caption("Smart Loan Decision Support System")
+# ----------- TITLE -----------
 
-# ---------------- HERO SECTION ----------------
-col1,col2 = st.columns([1,1])
+st.markdown("<h1 style='text-align:center;'>🏦 FinCred AI</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center;'>Smart Loan Decision System</p>", unsafe_allow_html=True)
+
+st.markdown("---")
+
+# ----------- HERO SECTION -----------
+
+col1,col2 = st.columns([1.3,1])
 
 with col1:
+
     st.markdown("""
     <div class="hero-card">
-    <h2>Financial Dashboard</h2>
-    <p>
-    FinCred AI is an intelligent loan decision system that analyzes
-    <b>Income</b>, <b>Credit Score</b>, and <b>Loan Amount</b> to estimate
-    loan approval probability and financial risk.
-    </p>
-    <p>
-    Explore features like:
-    <br>• Loan Risk Dashboard
-    <br>• Loan Prediction
-    <br>• EMI Calculator
-    <br>• Bulk Loan Analysis
-    </p>
+
+    ### Financial Intelligence Dashboard
+
+    FinCred AI analyzes **Income, Credit Score, and Loan Amount**
+    to estimate **loan approval probability and financial risk**.
+
+    **System Features**
+
+    • Loan Risk Dashboard  
+    • Loan Prediction System  
+    • EMI Calculator  
+    • Bulk Loan Analysis  
+
     </div>
     """, unsafe_allow_html=True)
 
 with col2:
+
     st.image(
-        "https://images.unsplash.com/photo-1605902711622-cfb43c44367f",
-        use_container_width=True
+    "https://cdn-icons-png.flaticon.com/512/2830/2830284.png",
+    width=250
     )
 
 st.markdown("---")
 
-# ---------------- KPI CARDS ----------------
+# ----------- KPI CARDS -----------
+
 c1,c2,c3 = st.columns(3)
 
-with c1:
-    st.markdown("""
-    <div class="metric-card">
-    <h3>Loans Processed</h3>
-    <h2>120K</h2>
-    </div>
-    """, unsafe_allow_html=True)
+c1.markdown("""
+<div class="metric-card">
+<h3>Loans Processed</h3>
+<h2>120K</h2>
+</div>
+""", unsafe_allow_html=True)
 
-with c2:
-    st.markdown("""
-    <div class="metric-card">
-    <h3>Approved Loans</h3>
-    <h2>80K</h2>
-    </div>
-    """, unsafe_allow_html=True)
+c2.markdown("""
+<div class="metric-card">
+<h3>Approved Loans</h3>
+<h2>80K</h2>
+</div>
+""", unsafe_allow_html=True)
 
-with c3:
-    st.markdown("""
-    <div class="metric-card">
-    <h3>Approval Rate</h3>
-    <h2>66%</h2>
-    </div>
-    """, unsafe_allow_html=True)
+c3.markdown("""
+<div class="metric-card">
+<h3>Approval Rate</h3>
+<h2>66%</h2>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("---")
 
-# ---------------- CHAT MEMORY ----------------
+# ----------- CHAT MEMORY -----------
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# ---------------- HELPER FUNCTIONS ----------------
 def extract_values(text):
-    numbers = list(map(int, re.findall(r'\d+', text)))
-    if len(numbers) >= 2:
-        return numbers[0], numbers[1], 200000
-    return 50000, 700, 200000
+    numbers = list(map(int,re.findall(r'\d+',text)))
+    if len(numbers)>=2:
+        return numbers[0],numbers[1],200000
+    return 50000,700,200000
 
-def generate_answer(income, credit, loan, user_input):
+def generate_answer(income,credit,loan,user_input):
 
-    q = user_input.lower()
+    q=user_input.lower()
 
     if "important" in q:
         return "Credit score reflects repayment behaviour."
@@ -122,33 +124,36 @@ def generate_answer(income, credit, loan, user_input):
     if "risk" in q:
         return "Higher credit score means lower loan risk."
 
-    if credit < 500:
-        decision = "Rejected"
-    elif credit > 700:
-        decision = "Approved"
+    if credit<500:
+        decision="Rejected"
+    elif credit>700:
+        decision="Approved"
     else:
-        decision = "Likely Approved"
+        decision="Likely Approved"
 
-    risk_score = 100 - (credit // 10)
+    risk_score=100-(credit//10)
 
     return f"{decision} — Risk Score: {risk_score}/100"
 
-# ---------------- CHATBOT ----------------
-st.subheader("💬 FinCred AI Loan Assistant")
+# ----------- CHATBOT -----------
+
+st.subheader("💬 FinCred AI Assistant")
 
 user_input = st.chat_input("Ask about credit score, loan risk, or approval...")
 
 if user_input:
 
-    income, credit, loan = extract_values(user_input)
+    income,credit,loan = extract_values(user_input)
 
-    response = generate_answer(income, credit, loan, user_input)
+    response = generate_answer(income,credit,loan,user_input)
 
-    st.session_state.messages.append(("user", user_input))
-    st.session_state.messages.append(("assistant", response))
+    st.session_state.messages.append(("user",user_input))
+    st.session_state.messages.append(("assistant",response))
 
-for role, msg in st.session_state.messages:
+for role,msg in st.session_state.messages:
+
     with st.chat_message(role):
+
         st.markdown(msg)
 
 st.markdown("---")
