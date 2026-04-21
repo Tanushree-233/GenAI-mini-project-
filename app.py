@@ -70,8 +70,8 @@ with col1:
 with col2:
 
     st.image(
-    "https://cdn-icons-png.flaticon.com/512/2830/2830284.png",
-    width=250
+"https://images.unsplash.com/photo-1556155092-8707de31f9c4",
+use_container_width=True
     )
 
 st.markdown("---")
