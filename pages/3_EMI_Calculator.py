@@ -1,18 +1,29 @@
 import streamlit as st
+import matplotlib.pyplot as plt
 
-st.title("💳 EMI Calculator")
+st.title("💰 EMI Calculator")
 
-loan = st.slider("Loan Amount",10000,500000,200000)
-interest = st.slider("Interest Rate (%)",1,20,10)
-tenure = st.slider("Loan Tenure (months)",6,120,36)
+# Inputs
+loan_amount = st.slider("Loan Amount", 10000, 1000000, 200000)
+interest_rate = st.slider("Interest Rate (%)", 1.0, 20.0, 10.0)
+tenure = st.slider("Loan Tenure (months)", 6, 120, 12)
 
-P = loan
-r = interest/(12*100)
-n = tenure
+# EMI Formula
+r = interest_rate / 12 / 100
 
-if r>0:
-    emi=(P*r*(1+r)**n)/((1+r)**n-1)
-else:
-    emi=P/n
+emi = loan_amount * r * (1 + r) ** tenure / ((1 + r) ** tenure - 1)
 
 st.subheader(f"Monthly EMI: ₹{round(emi,2)}")
+
+# Payment details
+total_payment = emi * tenure
+total_interest = total_payment - loan_amount
+
+st.subheader("Payment Breakdown")
+
+data = [loan_amount, total_interest]
+labels = ["Principal", "Interest"]
+
+fig, ax = plt.subplots()
+ax.pie(data, labels=labels, autopct="%1.1f%%")
+st.pyplot(fig)
