@@ -42,7 +42,7 @@ st.markdown("---")
 st.markdown("### Financial Analytics Overview")
 
 st.image(
-"https://cdn.dribbble.com/userupload/3961906/file/original-1c8c81b02a3b75f0b02f2d3c1c2de142.png",
+"https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
 use_container_width=True
 )
 
