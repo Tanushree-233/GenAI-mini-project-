@@ -1,4 +1,6 @@
 streamlit
 transformers
 torch
-PyPDF2
+plotly
+reportlab
+pandas
