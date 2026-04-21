@@ -3,63 +3,112 @@ import re
 
 st.set_page_config(page_title="FinCred AI", layout="wide")
 
-# ------------------ TITLE ------------------
+# ----------- THEME -----------
 
-st.title("🏦 FinCred AI – Smart Loan Decision System")
+st.markdown("""
+<style>
+.stApp{
+background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
+.card{
+background: rgba(255,255,255,0.08);
+padding:20px;
+border-radius:16px;
+backdrop-filter: blur(10px);
+}
+h1,h2,h3,h4,h5,h6,p,span,label{
+color:white !important;
+}
+#MainMenu {visibility:hidden;}
+footer {visibility:hidden;}
+</style>
+""", unsafe_allow_html=True)
 
-st.write("""
-FinCred AI is an intelligent financial decision dashboard that evaluates
-loan applications using parameters like **income, credit score, and loan amount**.
+# ----------- TITLE -----------
 
-The system provides:
+st.markdown("<h1 style='text-align:center;'>🏦 FinCred AI</h1>", unsafe_allow_html=True)
+st.caption("Smart Loan Decision System")
 
-• Loan approval probability  
-• Risk score analysis  
-• EMI calculation  
-• Bulk dataset prediction  
-• AI powered loan assistant
+st.markdown("""
+FinCred AI is an intelligent **loan decision support system** built using
+Python and Streamlit.
+
+The system analyzes financial parameters such as:
+
+• Income  
+• Credit Score  
+• Loan Amount  
+
+and provides **loan approval probability and risk analysis**.
+
+Use the **sidebar pages** to explore:
+
+• Dashboard  
+• Loan Prediction  
+• EMI Calculator  
+• Bulk Prediction
 """)
-
-st.image(
-"https://images.unsplash.com/photo-1551288049-bebda4e38f71",
-use_container_width=True
-)
 
 st.markdown("---")
 
-# ------------------ CHATBOT ------------------
-
-st.subheader("💬 AI Loan Assistant")
+# ----------- CHAT MEMORY -----------
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-def generate_answer(user_input):
+# ----------- HELPER FUNCTIONS -----------
 
-    q = user_input.lower()
+def extract_values(text):
+    numbers = list(map(int,re.findall(r'\d+',text)))
+    if len(numbers)>=2:
+        return numbers[0],numbers[1],200000
+    return 50000,700,200000
 
-    if "credit score" in q:
-        return "A credit score above 700 significantly increases loan approval chances."
+def generate_answer(income,credit,loan,user_input):
 
-    if "loan risk" in q:
-        return "Loan risk depends mainly on credit score and income stability."
+    q=user_input.lower()
 
     if "important" in q:
-        return "Credit score and repayment history are the most important factors."
+        return "Credit score reflects repayment behaviour."
 
-    return "I can help explain loan approval factors like credit score, income, and risk."
+    if "risk" in q:
+        return "Higher credit score means lower loan risk."
+
+    if credit<500:
+        decision="Rejected"
+    elif credit>700:
+        decision="Approved"
+    else:
+        decision="Likely Approved"
+
+    risk_score=100-(credit//10)
+
+    return f"{decision} — Risk Score: {risk_score}/100"
+
+
+# ----------- CHATBOT -----------
+
+st.subheader("💬 FinCred AI Assistant")
 
 user_input = st.chat_input("Ask about loans, credit score, or risk...")
 
 if user_input:
 
-    response = generate_answer(user_input)
+    income,credit,loan = extract_values(user_input)
 
-    st.session_state.messages.append(("user", user_input))
-    st.session_state.messages.append(("assistant", response))
+    res = generate_answer(income,credit,loan,user_input)
 
-for role, message in st.session_state.messages:
+    st.session_state.messages.append(("user",user_input))
+    st.session_state.messages.append(("assistant",res))
+
+
+for role,msg in st.session_state.messages:
 
     with st.chat_message(role):
 
-        st.markdown(message)
+        st.markdown(msg)
+
+st.markdown("---")
+
+st.caption("🚀 FinCred AI | Smart Loan Decision System")
