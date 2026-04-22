@@ -32,14 +32,14 @@ risk_score = max(10, int(100 - (credit / 8)))
 fig = go.Figure(go.Indicator(
     mode="gauge+number",
     value=risk_score,
-    title={"text": "Risk Score"},
+    title={"text": "Loan Risk Score", "font": {"size": 26}},
     gauge={
         "axis": {"range": [0, 100]},
-        "bar": {"color": "white"},
+        "bar": {"color": "white", "thickness": 0.25},
         "steps": [
-            {"range": [0, 30], "color": "green"},
-            {"range": [30, 60], "color": "yellow"},
-            {"range": [60, 100], "color": "red"}
+            {"range": [0, 30], "color": "#00c853"},
+            {"range": [30, 60], "color": "#ffd600"},
+            {"range": [60, 100], "color": "#ff3d00"}
         ],
     }
 ))
