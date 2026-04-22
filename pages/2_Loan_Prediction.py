@@ -4,7 +4,7 @@ import plotly.express as px
 
 st.title("🎯 Loan Prediction")
 
-# -------- INPUT SLIDERS --------
+# ---------- INPUT SLIDERS ----------
 
 income = st.slider("Income", 10000, 100000, 50000)
 credit = st.slider("Credit Score", 300, 850, 700)
@@ -12,7 +12,7 @@ loan = st.slider("Loan Amount", 10000, 500000, 200000)
 
 st.markdown("---")
 
-# -------- LOAN DECISION --------
+# ---------- LOAN DECISION ----------
 
 if credit < 600:
     decision = "Rejected"
@@ -25,9 +25,9 @@ st.subheader(f"Loan Decision: {decision}")
 
 st.markdown("---")
 
-# -------- RISK SCORE --------
+# ---------- RISK SCORE ----------
 
-risk_score = 100 - (credit // 10)
+risk_score = max(10, int(100 - (credit / 8)))
 
 fig = go.Figure(go.Indicator(
     mode="gauge+number",
@@ -35,6 +35,7 @@ fig = go.Figure(go.Indicator(
     title={"text": "Risk Score"},
     gauge={
         "axis": {"range": [0, 100]},
+        "bar": {"color": "white"},
         "steps": [
             {"range": [0, 30], "color": "green"},
             {"range": [30, 60], "color": "yellow"},
@@ -45,7 +46,18 @@ fig = go.Figure(go.Indicator(
 
 st.plotly_chart(fig, use_container_width=True)
 
-# -------- APPROVAL PROBABILITY --------
+# ---------- RISK LEVEL ----------
+
+if risk_score < 30:
+    st.success("Low Risk")
+elif risk_score < 60:
+    st.warning("Medium Risk")
+else:
+    st.error("High Risk")
+
+st.markdown("---")
+
+# ---------- APPROVAL PROBABILITY ----------
 
 if credit > 750:
     approval = 95
@@ -58,12 +70,14 @@ else:
 
 st.markdown(f"### Approval Probability: **{approval}%**")
 
-# -------- AI EXPLANATION --------
+st.markdown("---")
+
+# ---------- AI EXPLANATION ----------
 
 st.markdown("### AI Explanation")
 
 if credit > 700:
-    st.success("High credit score indicates reliable repayment behavior.")
+    st.success("High credit score indicates reliable repayment behaviour.")
 elif credit > 600:
     st.warning("Moderate credit score indicates medium loan risk.")
 else:
@@ -71,13 +85,18 @@ else:
 
 st.markdown("---")
 
-# -------- FINANCIAL COMPARISON CHART --------
+# ---------- FINANCIAL COMPARISON CHART ----------
 
 data = {
     "Category": ["Income", "Loan Amount"],
     "Amount": [income, loan]
 }
 
-fig2 = px.bar(data, x="Category", y="Amount", title="Financial Comparison")
+fig2 = px.bar(
+    data,
+    x="Category",
+    y="Amount",
+    title="Financial Comparison"
+)
 
 st.plotly_chart(fig2, use_container_width=True)
