@@ -1,4 +1,3 @@
-
 import streamlit as st
 import re
 
@@ -94,33 +93,37 @@ def generate_answer(income, credit, loan, user_input):
 
     q = user_input.lower()
 
-    # -------- EXPLANATION QUERIES --------
+    # -------- DETECT NUMERIC INPUT (PREDICTION MODE) --------
+    numbers = re.findall(r'\d+', user_input)
+
+    if len(numbers) >= 2:
+
+        if credit < 500:
+            decision = "Rejected"
+        elif credit > 700:
+            decision = "Approved"
+        else:
+            decision = "Likely Approved"
+
+        risk_score = max(10, int(100 - (credit / 8)))
+
+        return f"{decision} — Risk Score: {risk_score}/100"
+
+    # -------- EXPLANATION MODE --------
 
     if "credit score" in q:
         return "A credit score is a number that represents your creditworthiness. Higher scores increase loan approval chances."
 
-    if "important" in q:
-        return "Credit score reflects repayment behaviour and is one of the most important factors in loan approval."
-
     if "risk" in q:
         return "Loan risk indicates the probability of default. Higher credit score means lower risk."
 
+    if "important" in q:
+        return "Credit score reflects repayment behaviour and is very important in loan approval."
+
     if "loan approval" in q:
-        return "Loan approval depends on credit score, income stability, and loan amount."
+        return "Loan approval depends on credit score, income, and loan amount."
 
-    # -------- PREDICTION LOGIC --------
-
-    if credit < 500:
-        decision = "Rejected"
-    elif credit > 700:
-        decision = "Approved"
-    else:
-        decision = "Likely Approved"
-
-    risk_score = 100 - (credit // 10)
-
-    return f"{decision} — Risk Score: {risk_score}/100"
-
+    return "Please provide income and credit score to predict loan approval."
 
 # ---------- CHATBOT ----------
 
