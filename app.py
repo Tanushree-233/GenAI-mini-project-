@@ -1,3 +1,4 @@
+
 import streamlit as st
 import re
 
@@ -86,28 +87,40 @@ def extract_values(text):
     numbers = list(map(int, re.findall(r'\d+', text)))
     if len(numbers) >= 2:
         return numbers[0], numbers[1], 200000
-    return 50000,700,200000
+    return 50000, 700, 200000
 
-def generate_answer(income,credit,loan,user_input):
 
-    q=user_input.lower()
+def generate_answer(income, credit, loan, user_input):
+
+    q = user_input.lower()
+
+    # -------- EXPLANATION QUERIES --------
+
+    if "credit score" in q:
+        return "A credit score is a number that represents your creditworthiness. Higher scores increase loan approval chances."
 
     if "important" in q:
-        return "Credit score reflects repayment behaviour."
+        return "Credit score reflects repayment behaviour and is one of the most important factors in loan approval."
 
     if "risk" in q:
-        return "Higher credit score means lower loan risk."
+        return "Loan risk indicates the probability of default. Higher credit score means lower risk."
+
+    if "loan approval" in q:
+        return "Loan approval depends on credit score, income stability, and loan amount."
+
+    # -------- PREDICTION LOGIC --------
 
     if credit < 500:
-        decision="Rejected"
+        decision = "Rejected"
     elif credit > 700:
-        decision="Approved"
+        decision = "Approved"
     else:
-        decision="Likely Approved"
+        decision = "Likely Approved"
 
     risk_score = 100 - (credit // 10)
 
     return f"{decision} — Risk Score: {risk_score}/100"
+
 
 # ---------- CHATBOT ----------
 
@@ -117,14 +130,14 @@ user_input = st.chat_input("Ask about credit score, loan risk, or approval...")
 
 if user_input:
 
-    income,credit,loan = extract_values(user_input)
+    income, credit, loan = extract_values(user_input)
 
-    response = generate_answer(income,credit,loan,user_input)
+    response = generate_answer(income, credit, loan, user_input)
 
-    st.session_state.messages.append(("user",user_input))
-    st.session_state.messages.append(("assistant",response))
+    st.session_state.messages.append(("user", user_input))
+    st.session_state.messages.append(("assistant", response))
 
-for role,msg in st.session_state.messages:
+for role, msg in st.session_state.messages:
 
     with st.chat_message(role):
         st.markdown(msg)
